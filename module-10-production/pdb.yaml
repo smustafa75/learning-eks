@@ -1,0 +1,9 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: resilient-app-pdb
+spec:
+  minAvailable: 4    # Always keep at least 4 of 6 pods running
+  selector:
+    matchLabels:
+      app: resilient-app

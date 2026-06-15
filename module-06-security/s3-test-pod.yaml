@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: s3-test
+spec:
+  serviceAccountName: s3-reader
+  containers:
+  - name: aws-cli
+    image: amazon/aws-cli:latest
+    command: ["sleep", "3600"]

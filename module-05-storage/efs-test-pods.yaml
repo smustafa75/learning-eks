@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efs-writer
+spec:
+  containers:
+  - name: writer
+    image: busybox:1.36
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      while true; do
+        echo "Written by efs-writer at $(date)" >> /shared/log.txt
+        sleep 5
+      done
+    volumeMounts:
+    - mountPath: /shared
+      name: efs-volume
+  volumes:
+  - name: efs-volume
+    persistentVolumeClaim:
+      claimName: efs-claim
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efs-reader
+spec:
+  containers:
+  - name: reader
+    image: busybox:1.36
+    command: ["/bin/sh", "-c"]
+    args: ["tail -f /shared/log.txt"]
+    volumeMounts:
+    - mountPath: /shared
+      name: efs-volume
+  volumes:
+  - name: efs-volume
+    persistentVolumeClaim:
+      claimName: efs-claim

@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: high-cpu-alert
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: cpu-alerts
+    rules:
+    - alert: HighPodCPU
+      expr: rate(container_cpu_usage_seconds_total{container!=""}[5m]) > 0.8
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod {{ $labels.pod }} high CPU usage"
+        description: "CPU usage above 80% for 2 minutes"

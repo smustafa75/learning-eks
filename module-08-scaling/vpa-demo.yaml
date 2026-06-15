@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpa-demo
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vpa-demo
+  template:
+    metadata:
+      labels:
+        app: vpa-demo
+    spec:
+      containers:
+      - name: vpa-demo
+        image: registry.k8s.io/hpa-example
+        resources:
+          requests:
+            cpu: 100m
+            memory: 50Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: vpa-demo
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vpa-demo
+  updatePolicy:
+    updateMode: "Off"  # Start with "Off" to just get recommendations

@@ -1,0 +1,9 @@
+pk.md
+.DS_Store
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+__pycache__/
+venv/
+*.zip
